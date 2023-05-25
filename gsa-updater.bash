@@ -16,6 +16,79 @@ if [ ${ID} -ne 0 ] && [ whoami != "root" ]; then
 	exit 1
 fi
 
+upgrade_postgresql () {
+	#List all of the postgresql clusters
+	pg_lsclusters
+	echo ""
+	read -p "Which version would you like to drop? (Ex: 14 or 15) Usually the later version. " VERSION
+	#Dropping the newer version data.
+	pg_dropcluster --stop ${VERSION} main
+	if [ $? == 0 ]; then
+		#Start the upgradecluster procedure.
+		read -p "Which cluster version to upgrade?" VERSION
+		pg_upgradecluster ${VERSION} main
+		if [ $? == 0 ]; then
+			echo "Which version should be deleted? (Ex: 14 or 15) Usually the later version " VERSION
+			echo "Continue with removing the old version? (y/N) " CHOICE
+			if [ ${CHOICE} == "Y" || ${CHOICE} == "y" ]; then
+				pg_dropcluster --stop ${VERSION} main
+			fi
+	fi 
+	Trouble_Shoot
+}
+
+migrate_postgresql() {
+	systemctl daemon-reload
+	if [ $? == 0 ]; then
+		echo "Creating Postgresql database"
+		runuser -u postgres -- /usr/share/gvm/create-postgresql-database
+		if [ $? == 0 ]; then
+			echo "Postgresql database created successfully"
+			read -p "Continue with migrating postgresql? (y/N) " MENU
+			if [ ${MENU} == "Y" || ${MENU} == "y" ]; then
+				runuser -u _gvm -- gvmd --migrate
+			else
+				echo "Postgresql Migration abandoned."
+				exit 1
+			fi
+		else
+			echo "There was an issue with creating Postgresql database. Run gvm-check-setup."
+			sleep 4
+			exit 1
+		fi
+	fi
+	Trouble_Shoot
+}
+
+Trouble_Shoot () {
+	clear
+	#For trouble shooting various issues with Greenbone.
+	printf '%s\n' \
+	'#****************************************************' \
+	'         GSA Scanner Suite - TroubleShooter   ' \
+	"* (1) - Upgrade Postgresql" \
+	"* (2) - Migrate Postgresql database to new version" \
+	"* (3) - Check GVM Setup" \
+	"* (E) - Exit" \
+	'         Created By: BlackRanger07   ' \
+	'#****************************************************' \
+
+	echo ""
+	read -p "Make your choice from the above menu: " MENU
+	echo ""
+
+	if [ ${MENU} == "1" ]; then
+		upgrade_postgresql
+	elif [ ${MENU} == "2" ]; then
+		migrate_postgresql
+	elif [ ${MENU} == "3" ]; then
+		gvm-check-setup
+	elif [ ${MENU} == "E" || ${MENU} == "e" ]; then
+		echo "You've exited the program."
+		exit 1
+	fi
+}
+
 WEB_UI () {
 	#Grant access for any device to reach web UI.
 	GSAFILE="/usr/lib/systemd/system/greenbone-security-assistant.service"
@@ -117,7 +190,8 @@ while [ 1 == 1 ]; do
 	"* (1) - Install GSA Vulnerability Scanner" \
 	"* (2) - Update GSA Feed and Start GSA" \
 	"* (3) - Grant access for any device to reach WEB UI" \
-	"* (4) - Exit" \
+	"* (4) - TroubleShooting" \
+	"* (E) - Exit" \
 	'         Created By: BlackRanger07   ' \
 	'#****************************************************' \
 
@@ -132,6 +206,8 @@ while [ 1 == 1 ]; do
 	elif [ ${MENU} == "3" ]; then
 		WEB_UI
 	elif [ ${MENU} == "4" ]; then
+		Trouble_Shoot
+	elif [ ${MENU} == "E" || ${MENU} == "e" ]; then
 		echo "You've exited the program."
 		exit 1
 	elif [ ${MENU} != "1" ] || [ ${MENU} != "2"  ] || [ ${MENU} != "3" ] || [ ${MENU} != "4" ]; then
