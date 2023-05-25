@@ -30,9 +30,10 @@ upgrade_postgresql () {
 		if [ $? == 0 ]; then
 			echo "Which version should be deleted? (Ex: 14 or 15) Usually the later version " VERSION
 			echo "Continue with removing the old version? (y/N) " CHOICE
-			if [ ${CHOICE} == "Y" || ${CHOICE} == "y" ]; then
+			if [ ${CHOICE} == "Y" ] || [ ${CHOICE} == "y" ]; then
 				pg_dropcluster --stop ${VERSION} main
 			fi
+		fi	
 	fi 
 	Trouble_Shoot
 }
@@ -45,7 +46,7 @@ migrate_postgresql() {
 		if [ $? == 0 ]; then
 			echo "Postgresql database created successfully"
 			read -p "Continue with migrating postgresql? (y/N) " MENU
-			if [ ${MENU} == "Y" || ${MENU} == "y" ]; then
+			if [ ${MENU} == "Y" ] || [ ${MENU} == "y" ]; then
 				runuser -u _gvm -- gvmd --migrate
 			else
 				echo "Postgresql Migration abandoned."
@@ -83,7 +84,7 @@ Trouble_Shoot () {
 		migrate_postgresql
 	elif [ ${MENU} == "3" ]; then
 		gvm-check-setup
-	elif [ ${MENU} == "E" || ${MENU} == "e" ]; then
+	elif [ ${MENU} == "E" ] || [ ${MENU} == "e" ]; then
 		echo "You've exited the program."
 		exit 1
 	fi
@@ -207,10 +208,11 @@ while [ 1 == 1 ]; do
 		WEB_UI
 	elif [ ${MENU} == "4" ]; then
 		Trouble_Shoot
-	elif [ ${MENU} == "E" || ${MENU} == "e" ]; then
+	elif [ ${MENU} == "E" ] || [ ${MENU} == "e" ]; then
 		echo "You've exited the program."
 		exit 1
 	elif [ ${MENU} != "1" ] || [ ${MENU} != "2"  ] || [ ${MENU} != "3" ] || [ ${MENU} != "4" || [ ${MENU} != "E" || [ ${MENU} != "e" ]; then
 		echo "Invalid input, please try again."
+		sleep 2
 	fi
 done
