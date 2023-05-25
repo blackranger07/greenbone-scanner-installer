@@ -210,7 +210,7 @@ while [ 1 == 1 ]; do
 	elif [ ${MENU} == "E" || ${MENU} == "e" ]; then
 		echo "You've exited the program."
 		exit 1
-	elif [ ${MENU} != "1" ] || [ ${MENU} != "2"  ] || [ ${MENU} != "3" ] || [ ${MENU} != "4" ]; then
+	elif [ ${MENU} != "1" ] || [ ${MENU} != "2"  ] || [ ${MENU} != "3" ] || [ ${MENU} != "4" || [ ${MENU} != "E" || [ ${MENU} != "e" ]; then
 		echo "Invalid input, please try again."
 	fi
 done
