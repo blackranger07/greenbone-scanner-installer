@@ -120,7 +120,7 @@ INSTALL_GSA () {
 			#Update and upgrade the system.
 			read -p "Update system (y/N)? " CHOICE
 			if [ ${CHOICE} == "y" ] || [ ${CHOICE} == "Y" ]; then
-				apt-get update -y #&& apt-get upgrade -y
+				apt-get update -y && apt-get upgrade -y
 			fi
 			if [ $? == 0 ]; then
 				#Make any prerequisite installs/changes
