@@ -203,7 +203,7 @@ while [ 1 == 1 ]; do
 	if [ ${MENU} == "1" ]; then
 		INSTALL_GSA
 	elif [ ${MENU} == "2" ]; then
-		gvm-feed-update && gvm-start
+		greenbone-feed-sync && gvm-start
 	elif [ ${MENU} == "3" ]; then
 		WEB_UI
 	elif [ ${MENU} == "4" ]; then
