@@ -141,11 +141,12 @@ INSTALL_GSA () {
 						#Setup GVM
 						clear
 						echo "Setting up GVM, this will take at least 30 mins to complete..."
+						echo "Log file can be viewed in /var/log/gvm-setup-logs.log"
 						sleep 1.5
-						touch /opt/gvm-setup-log.txt
+						touch /var/log/gvm-setup-logs.log
 						touch /opt/gvm-pass.txt
-						gvm-setup >> /opt/gvm-setup-log.txt
-						grep "User created with password" /opt/gvm-setup-log.txt | awk '{print $6}' | cut -d "." -f 1 | sort -u > /opt/gvm-pass.txt
+						gvm-setup &>> /var/log/gvm-setup-logs.log
+						grep "User created with password" /var/log/gvm-setup-logs.log | awk '{print $6}' | cut -d "." -f 1 | sort -u > /opt/gvm-pass.txt
 						if [ $? == 0 ]; then
 							#Install Security Feeds
 							greenbone-feed-sync —type GVMD_DATA
