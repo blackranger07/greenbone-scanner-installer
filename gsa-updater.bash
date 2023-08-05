@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #******************************************************
-#    GSA Scanner Suite Installer - Kali Linux Only    *
+#    GSA Scanner Suite Installer - Kali Linux 2023    *
 # Created By: BlackRanger07                           *
 # Date: October 3, 2022                               *
 #******************************************************
@@ -117,10 +117,10 @@ INSTALL_GSA () {
 		#Verify Internet Connectivity...
 		ping -c 1 8.8.8.8 > /dev/null 2>&1
 		if [ $? == 0 ]; then
-			#Update and upgrade the system.
+			#Update the system.
 			read -p "Update system (y/N)? " CHOICE
 			if [ ${CHOICE} == "y" ] || [ ${CHOICE} == "Y" ]; then
-				apt-get update -y && apt-get upgrade -y
+				apt-get update -y #&& apt-get upgrade -y
 			fi
 			if [ $? == 0 ]; then
 				#Make any prerequisite installs/changes
@@ -132,21 +132,20 @@ INSTALL_GSA () {
 					apt-get install vim -y # IF any other programs are needed, add on same line.
 				fi
 				if [ $? == 0 ]; then
-					#Install OpenVAS
+					#Install GVM
 					clear
-					echo "Installing OpenVAS"
+					echo "Installing GVM"
 					sleep 1.5
-					apt-get install openvas -y
+					apt install gvm -y
 					if [ $? == 0 ]; then
-						#Install GVM
+						#Setup GVM
 						clear
-						echo "Installing GVM, this will take at least 30 mins to complete..."
+						echo "Setting up GVM, this will take at least 30 mins to complete..."
 						sleep 1.5
 						touch /opt/gvm-setup-log.txt
 						touch /opt/gvm-pass.txt
 						gvm-setup >> /opt/gvm-setup-log.txt
 						grep "User created with password" /opt/gvm-setup-log.txt | awk '{print $6}' | cut -d "." -f 1 | sort -u > /opt/gvm-pass.txt
-						gvm-check-setup #Checks to ensure install was successful.
 						if [ $? == 0 ]; then
 							#Install Security Feeds
 							greenbone-feed-sync —type GVMD_DATA
@@ -155,17 +154,18 @@ INSTALL_GSA () {
 							gvm-stop
 						fi
 	                    if [ $? == 0 ]; then
-	                    	gvm-feed-update
+	                    	greenbone-feed-sync
+	                    	gvm-check-setup #Checks to ensure install was successful.
 	                    	gvm-start
 	                    fi
 	                    clear
-						echo "Copy the admin password below, without it you will not be able to login to OpenVAS GSA."
+						echo "Copy the admin password below, without it you will not be able to login to Greenbone-Security-Assistant."
 	                    cat /opt/gvm-pass.txt
 	                    exit 1
 	                    #ERASE files in /opt afterwards...
 					fi
 				else
-					echo "There was an error installing OpenVAS. Please Investigate."
+					echo "There was an error installing GVM. Please Investigate."
 					exit 1
 				fi
 			else
