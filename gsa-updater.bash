@@ -134,16 +134,14 @@ INSTALL_GSA () {
 				if [ $? == 0 ]; then
 					#Install GVM
 					clear
-					echo "Installing GVM"
-					sleep 1.5
-					apt install gvm -y
+					echo "Installing GVM..."
+					touch /var/log/gvm-setup-logs.log
+					apt install gvm -y &>> /var/log/gvm-setup-logs.log
 					if [ $? == 0 ]; then
 						#Setup GVM
 						clear
 						echo "Setting up GVM, this will take at least 30 mins to complete..."
 						echo "Log file can be viewed in /var/log/gvm-setup-logs.log"
-						sleep 1.5
-						touch /var/log/gvm-setup-logs.log
 						touch /opt/gvm-pass.txt
 						gvm-setup &>> /var/log/gvm-setup-logs.log
 						grep "User created with password" /var/log/gvm-setup-logs.log | awk '{print $6}' | cut -d "." -f 1 | sort -u > /opt/gvm-pass.txt
