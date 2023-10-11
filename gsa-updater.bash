@@ -25,7 +25,7 @@ upgrade_postgresql () {
 	pg_dropcluster --stop ${VERSION} main
 	if [ $? == 0 ]; then
 		#Start the upgradecluster procedure.
-		read -p "Which cluster version to upgrade?" VERSION
+		read -p "Which cluster version to upgrade? " VERSION
 		pg_upgradecluster ${VERSION} main
 		if [ $? == 0 ]; then
 			echo "Which version should be deleted? (Ex: 14 or 15) Usually the later version " VERSION
@@ -84,6 +84,7 @@ Trouble_Shoot () {
 		migrate_postgresql
 	elif [ ${MENU} == "3" ]; then
 		gvm-check-setup
+		sleep 25
 	elif [ ${MENU} == "E" ] || [ ${MENU} == "e" ]; then
 		echo "You've exited the program."
 		exit 1
