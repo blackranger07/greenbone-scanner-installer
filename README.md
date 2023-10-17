@@ -18,3 +18,5 @@ Make the script gsascanner.bash executable:
 **To start:** gvm-start
 
 **To stop:** gvm-stop
+
+**ACCESS WEBUI locally via: https://127.0.0.1:9392**
