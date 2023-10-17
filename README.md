@@ -10,3 +10,8 @@ Make the script gsascanner.bash executable:
 1.) chmod 755 gsascanner.bash 
 
 2.) To Start the installer: sudo ./gsascanner.bash
+
+***How to Greenbone?***
+***Update vulnerability database:*** greenbone-feed-sync (This will take time to complete.)
+***To start:*** gvm-start
+***To stop:*** gvm-stop
