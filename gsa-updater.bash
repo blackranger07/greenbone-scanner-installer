@@ -98,7 +98,7 @@ WEB_UI () {
 		sleep 5
 	elif [ -f ${GSAFILE} ]; then
 		gvm-stop
-		sed -i 's/127.0.0.1/0.0.0.0/g' ${GSAFILE}
+		sed -i"" --follow-symlinks 's/127.0.0.1/0.0.0.0/g' ${GSAFILE}
 	fi
 	if [ $? == 0 ]; then
 	   	#Restart daemon
