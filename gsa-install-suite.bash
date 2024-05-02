@@ -1,9 +1,10 @@
 #!/usr/bin/bash
 
 #******************************************************
-#    GSA Scanner Suite Installer - Kali Linux 2023    *
+#    GSA Scanner Installer Suite - Kali Linux 2023    *
 # Created By: BlackRanger07                           *
-# Date: October 3, 2022                               *
+# Created: October 3, 2024                            *
+# REV: 1.3.0                                          *
 #******************************************************
 
 clear 
@@ -110,6 +111,20 @@ WEB_UI () {
 	fi
 }
 
+CVE_AutoUpdate () {
+	#Sets up daily updates for Greenbone CVE Library to stay current with latest vulnerabilities to scan against.
+	echo "Moving files greenbone-vul-update.service and greenbone-vul-update.timer to /etc/systemd/system..."
+	sleep 2
+	mv -v ./greenbone-vul-update.* /etc/systemd/system
+	echo "Moving gvm-cve-vulnerability-update.sh to /srv..."
+	sleep 1.5
+	mv -v ./gvm-cve-vulnerability-update.sh /srv
+	echo "Starting and Enabling greenbone-vul-update.timer..."
+	sleep 1.5
+	systemctl start greenbone-vul-update.timer
+	systemctl enable greenbone-vul-update.timer
+}
+
 INSTALL_GSA () {
 	read -p "Proceed with Greenbone Security Agent Installation (y/N)? " CHOICE
 
@@ -184,13 +199,16 @@ INSTALL_GSA () {
 while [ 1 == 1 ]; do
 	clear
 
+	MENUOPTION=("1" "2" "3" "4" "5" "e" "E")
+
 	printf '%s\n' \
 	'#****************************************************' \
 	'         GSA Scanner Suite - Kali Linux   ' \
 	"* (1) - Install GSA Vulnerability Scanner" \
 	"* (2) - Update GSA Feed and Start GSA" \
 	"* (3) - Grant access for any device to reach WEB UI" \
-	"* (4) - TroubleShooting" \
+	"* (4) - CVE Library Auto Update Setup (One Time)" \
+	"* (5) - TroubleShooting" \
 	"* (E) - Exit" \
 	'         Created By: BlackRanger07   ' \
 	'#****************************************************' \
@@ -206,11 +224,13 @@ while [ 1 == 1 ]; do
 	elif [ ${MENU} == "3" ]; then
 		WEB_UI
 	elif [ ${MENU} == "4" ]; then
+		CVE_AutoUpdate
+	elif [ ${MENU} == "5" ]; then
 		Trouble_Shoot
 	elif [ ${MENU} == "E" ] || [ ${MENU} == "e" ]; then
 		echo "You've exited the program."
 		exit 1
-	elif [ ${MENU} != "1" ] || [ ${MENU} != "2"  ] || [ ${MENU} != "3" ] || [ ${MENU} != "4" || [ ${MENU} != "E" || [ ${MENU} != "e" ]; then
+	elif [ ${MENU} != ${MENUOPTION[@]}; then
 		echo "Invalid input, please try again."
 		sleep 2
 	fi

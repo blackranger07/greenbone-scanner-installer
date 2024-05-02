@@ -1,0 +1,11 @@
+[Unit]
+Description=Calls the greenbone-vul-update.service daily at 7am.
+Requires=greenbone-vul-update.service
+
+[Timer]
+Unit=greenbone-vul-update.service
+OnCalendar=*-*-* 07:00:00 
+
+[Install]
+WantedBy=timers.target
+

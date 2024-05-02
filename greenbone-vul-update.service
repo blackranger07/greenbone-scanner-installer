@@ -1,0 +1,10 @@
+[Unit]
+Description=Updates GSA vulnerability database
+Wants=greenbone-vul-update.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash /srv/gvm-vulnerability-update.sh
+
+[Install]
+WantedBy=multi-user.target
