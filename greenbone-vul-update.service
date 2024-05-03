@@ -4,7 +4,7 @@ Wants=greenbone-vul-update.timer
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/bash /srv/gvm-vulnerability-update.sh
+ExecStart=/usr/bin/bash /srv/gvm-cve-vulnerability-update.sh
 
 [Install]
 WantedBy=multi-user.target
