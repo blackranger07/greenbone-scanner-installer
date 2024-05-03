@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
 #******************************************************
-#    GSA Scanner Installer Suite - Kali Linux 2023    *
+#    GSA Scanner Installer Suite - Kali Linux 2024    *
 # Created By: BlackRanger07                           *
 # Created: October 3, 2024                            *
-# REV: 1.3.0                                          *
+# REV: 1.3.1                                          *
 #******************************************************
 
 clear 
