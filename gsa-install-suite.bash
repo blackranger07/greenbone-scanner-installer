@@ -113,16 +113,26 @@ WEB_UI () {
 
 CVE_AutoUpdate () {
 	#Sets up daily updates for Greenbone CVE Library to stay current with latest vulnerabilities to scan against.
-	echo "Moving files greenbone-vul-update.service and greenbone-vul-update.timer to /etc/systemd/system..."
-	sleep 2
-	mv -v ./greenbone-vul-update.* /etc/systemd/system
-	echo "Moving gvm-cve-vulnerability-update.sh to /srv..."
-	sleep 1.5
-	mv -v ./gvm-cve-vulnerability-update.sh /srv
-	echo "Starting and Enabling greenbone-vul-update.timer..."
-	sleep 1.5
-	systemctl start greenbone-vul-update.timer
-	systemctl enable greenbone-vul-update.timer
+	if [ ! -f /etc/systemd/system/greenbone-vul-update.* ]; then
+		echo "Moving files greenbone-vul-update.service and greenbone-vul-update.timer to /etc/systemd/system..."
+		sleep 2
+		mv -v ./greenbone-vul-update.* /etc/systemd/system
+	fi
+	if [ ! -f /srv/gvm-cve-vulnerability-update.sh ]; then
+		echo "Moving gvm-cve-vulnerability-update.sh to /srv..."
+		sleep 1.5
+		mv -v ./gvm-cve-vulnerability-update.sh /srv
+		chmod 755 /srv/gvm-cve-vulnerability-update.sh
+		echo "Starting and Enabling greenbone-vul-update.timer..."
+		sleep 1.5
+		systemctl start greenbone-vul-update.timer
+		systemctl enable greenbone-vul-update.timer
+		if [ $? == 0 ]; then
+			clear
+			systemctl status greenbone-vul-update.timer
+			echo "Greenbone Daily CVE Auto Update is now configured."
+		fi
+	fi
 }
 
 INSTALL_GSA () {
