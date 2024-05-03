@@ -5,11 +5,13 @@ Greenbone Vulerability Scanner installer (for Kali Linux only) to check for vuln
 
 ***The script must be ran as the root/sudo user or it will not run.***
 
-Make the script gsascanner.bash executable:
+Make the script gsa-install-suite.bash executable:
 
-1.) chmod 755 gsascanner.bash 
+1.) chmod 755 gsa-install-suite.bash 
 
 2.) To Start the installer: sudo ./gsascanner.bash
+
+3.) Wait for the script to complete. All other files will be dealt with appropriately during the install.
 
 **How to Greenbone?**
 
